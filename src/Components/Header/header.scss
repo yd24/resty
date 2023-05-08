@@ -1,0 +1,9 @@
+@use '../../styles/_colors';
+
+header {
+  background-color: colors.$maincolor;
+  color: #eee;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
