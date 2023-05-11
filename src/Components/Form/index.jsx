@@ -29,7 +29,7 @@ function Form(props) {
         <button type="submit">GO!</button>
       </label>
       <label className="methods">
-        <span onClick={select} id="get">GET</span>
+        <span onClick={select} className='selected' id="get">GET</span>
         <span onClick={select} id="post">POST</span>
         <span onClick={select} id="put">PUT</span>
         <span onClick={select} id="delete">DELETE</span>
