@@ -7,7 +7,7 @@ function Results(props) {
     <div>
       <section>
         <h4>Results:</h4>
-        <pre className='json-container'>{props.data ? JSON.stringify(props.data, null, 2) : null}</pre>
+        <pre className='json-container' role='results'>{props.data ? JSON.stringify(props.data, null, 2) : null}</pre>
       </section>
 
       <section>
