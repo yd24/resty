@@ -11,7 +11,7 @@ describe('Testing that results display', () => {
   });
 
   test('If nothing is passed, results displays nothing', () => {
-    const {container} = render(<Results />);
-    expect(container.firstChild.firstChild).toBeEmptyDOMElement();
+    render(<Results />);
+    expect(screen.getByRole('code')).toBeEmptyDOMElement();
   });
 });

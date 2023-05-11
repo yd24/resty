@@ -9,6 +9,13 @@ html, body {
 body {
   background: $backgroundColor;
   height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  h2 {
+    text-align: center;
+    color: #666666;
+    margin-top: 1em;
+  }
 
   #root {
     display: flex;

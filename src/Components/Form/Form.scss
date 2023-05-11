@@ -3,29 +3,34 @@
 $radius: 40%;
 
 form {
-  display: inline-block;
-  margin: auto;
-  width: 200px;
-
   label {
     display: flex;
-    margin: 1rem 0;
-
+    justify-content: center;
+    margin-top: 1em;
     &.methods {
-      margin-top: 2em;
+      margin-top: 1em;
+      margin-bottom: 1em;
       span {
         cursor: pointer;
         margin-right: 1rem;
-        padding: .25rem .75rem;
+        padding: .5rem 1rem;
         background: colors.$maincolor;
+        border: 1px solid colors.$maincolor;
         border-radius: 5px;
         color: white;
 
-        &:hover, &.active {
+        &:hover, &.active, &.selected {
           background: #fff;
           color: #333333;
+          border: 1px solid #666666;
         }
       }
+    }
+
+    .url {
+      max-width: 60vw;
+      padding: 0.5em 1em;
+      flex: 1;
     }
   }
 }

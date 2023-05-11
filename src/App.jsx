@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, Fragment } from 'react';
 
 import './App.scss';
 
@@ -11,42 +11,38 @@ import Footer from './Components/Footer';
 import Form from './Components/Form';
 import Results from './Components/Results';
 
-class App extends React.Component {
+function App() {
+  //state
+  const [data, setData] = useState(null);
+  const [requestParams, setParams] = useState({method: 'GET'});
+  const [loading, setLoading] = useState(false);
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: null,
-      requestParams: {},
-    };
-  }
-
-  callApi = (requestParams) => {
+  let callApi = (requestParams) => {
     // mock output
-    const data = {
+    const mockdata = {
       count: 2,
       results: [
         {name: 'fake thing 1', url: 'http://fakethings.com/1'},
         {name: 'fake thing 2', url: 'http://fakethings.com/2'},
       ],
     };
-    this.setState({data, requestParams});
+    setData(mockdata.results);
+    console.log(loading);
   }
 
-  render() {
-    return (
-      <React.Fragment>
-        <Header />
-        <div className='log'>
-          <div>Request Method: {this.state.requestParams.method}</div>
-          <div>URL: {this.state.requestParams.url}</div>
-        </div>
-        <Form handleApiCall={this.callApi} />
-        <Results data={this.state.data} />
-        <Footer />
-      </React.Fragment>
-    );
-  }
+  return (
+    <Fragment>
+      <Header />
+      {/*<div className='log'>
+        <div>Request Method: {requestParams.method}</div>
+        <div>URL: {requestParams.url}</div>
+  </div>*/}
+      <h2>Test requests to your favorite API!</h2>
+      <Form handleApiCall={callApi} setParams={setParams} requestParams={requestParams} setLoading={setLoading}/>
+      <Results data={data} requestParams={requestParams} />
+      <Footer />
+    </Fragment>
+  );
 }
 
 export default App;
