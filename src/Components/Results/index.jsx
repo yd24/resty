@@ -1,11 +1,25 @@
 import React from 'react';
 import './results.scss';
 
+
 function Results(props) {
   return (
-    <section>
-      <pre>{props.data ? JSON.stringify(props.data, undefined, 2) : null}</pre>
-    </section>
+    <div>
+      <section>
+        <h4>Results:</h4>
+        <pre className='json-container'>{props.data ? JSON.stringify(props.data, null, 2) : null}</pre>
+      </section>
+
+      <section>
+        <h4>Insert JSON Data</h4>
+        {(props.requestParams?.method === 'POST' || props.requestParams?.method === 'PUT')
+          ?
+          <textarea></textarea>
+          :
+          <textarea disabled={true}></textarea>
+        }
+      </section>
+    </div>
   );
 }
 
