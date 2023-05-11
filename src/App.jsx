@@ -27,6 +27,7 @@ function App() {
       ],
     };
     setData(mockdata.results);
+    console.log(loading);
   }
 
   return (

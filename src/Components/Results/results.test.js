@@ -12,6 +12,6 @@ describe('Testing that results display', () => {
 
   test('If nothing is passed, results displays nothing', () => {
     render(<Results />);
-    expect(screen.getByRole('results')).toBeEmptyDOMElement();
+    expect(screen.getByRole('code')).toBeEmptyDOMElement();
   });
 });
