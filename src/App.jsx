@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 
 import './App.scss';
 
@@ -10,25 +10,47 @@ import Header from './Components/Header';
 import Footer from './Components/Footer';
 import Form from './Components/Form';
 import Results from './Components/Results';
+import axios from 'axios';
 
 function App() {
   //state
   const [data, setData] = useState(null);
   const [requestParams, setParams] = useState({method: 'GET'});
   const [loading, setLoading] = useState(false);
-
-  let callApi = (requestParams) => {
+  
+  let callApi = async(params) => {
     // mock output
-    const mockdata = {
+    /*const mockdata = {
       count: 2,
       results: [
         {name: 'fake thing 1', url: 'http://fakethings.com/1'},
         {name: 'fake thing 2', url: 'http://fakethings.com/2'},
       ],
-    };
-    setData(mockdata.results);
-    console.log(loading);
+    };*/
+    setParams(params);
+    await request(params);
   }
+
+  let request = async(params) => {
+    if (params.url) {
+      const config = {
+        method: params.method,
+        url: params.url,
+        data: JSON.stringify(params.body),
+      };
+      try {
+        let resp = await axios(config)
+        setData({body: resp.data, headers: resp.headers});
+      } catch(e) {
+        setData({body: `Error ${e.response.status}: Invalid request`, headers: `Error ${e.response.status}: Invalid request`});
+      }
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    request(requestParams);
+  }, [requestParams]);
 
   return (
     <Fragment>
@@ -39,7 +61,7 @@ function App() {
   </div>*/}
       <h2>Test requests to your favorite API!</h2>
       <Form handleApiCall={callApi} setParams={setParams} requestParams={requestParams} setLoading={setLoading}/>
-      <Results data={data} requestParams={requestParams} />
+      <Results data={data} requestParams={requestParams} loading={loading}/>
       <Footer />
     </Fragment>
   );
