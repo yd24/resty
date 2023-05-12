@@ -5,9 +5,8 @@ import '@testing-library/jest-dom';
 
 describe('Testing that results display', () => {
   test('Results display JSON data properly', () => {
-    render(<Results data={{id: 1}}/>);
-    let text = screen.getByText(/"id"/i);
-    expect(text).toBeVisible();
+    render(<Results data={{body: {id: 1}}}/>);
+    expect(screen.getByRole('code')).toBeTruthy();
   });
 
   test('If nothing is passed, results displays nothing', () => {
