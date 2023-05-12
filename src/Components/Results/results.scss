@@ -1,10 +1,13 @@
+@use '../../styles/_colors';
+@import url('https://cdn.jsdelivr.net/npm/pretty-print-json@2.0/dist/css/pretty-print-json.css');
+
 section {
   height: 50vh;
   margin: 2em auto;
-  padding: 1em 2em;
+  padding: 1em 3em;
   background-color: white;
   width: 80vw;
-  border-collapse: collapse;
+  overflow: scroll;
 
     h4 {
       margin-top: 0;
@@ -18,4 +21,22 @@ section {
 
 div {
   display: flex;
+}
+
+.results-tab {
+  margin-bottom: 1em;
+  span {
+    font-size: 12px;
+    padding: 0.5em 1em;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    margin-right: 1em;
+    cursor: pointer;
+
+    &.selected {
+      background-color: colors.$maincolor;
+      color: white;
+      border: 1px solid colors.$maincolor;
+    }
+  }
 }
