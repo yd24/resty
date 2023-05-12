@@ -1,5 +1,4 @@
 import { useState, useEffect, Fragment } from 'react';
-
 import './App.scss';
 
 // Let's talk about using index.js and some other name in the component folder.
@@ -9,7 +8,7 @@ import './App.scss';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
 import Form from './Components/Form';
-import Results from './Components/Results';
+import Content from './Components/Content';
 import axios from 'axios';
 
 function App() {
@@ -17,7 +16,7 @@ function App() {
   const [data, setData] = useState(null);
   const [requestParams, setParams] = useState({method: 'GET'});
   const [loading, setLoading] = useState(false);
-  
+
   let callApi = async(params) => {
     // mock output
     /*const mockdata = {
@@ -28,7 +27,6 @@ function App() {
       ],
     };*/
     setParams(params);
-    await request(params);
   }
 
   let request = async(params) => {
@@ -38,11 +36,36 @@ function App() {
         url: params.url,
         data: JSON.stringify(params.body),
       };
+      let date = new Date();
+      date = date.toISOString();
       try {
-        let resp = await axios(config)
-        setData({body: resp.data, headers: resp.headers});
+        let resp = await axios(config);
+        let update = {
+          body: resp.data, 
+          headers: resp.headers, 
+          history: null,
+        };
+        if (data?.history) {
+          data.history.push(`${date} - ${params.method} request to ${params.url}`);
+          update.history = data.history;
+        } else {
+          update.history = [`${date} - ${params.method} request to ${params.url}`];
+        }
+        setData(update);
       } catch(e) {
-        setData({body: `Error ${e.response.status}: Invalid request`, headers: `Error ${e.response.status}: Invalid request`});
+        console.log('yo');
+        let error = {
+            body: `Error ${e.response.status}: Invalid request`, 
+            headers: `Error ${e.response.status}: Invalid request`,
+            history: null,
+        };
+        if (data?.history) {
+          data.history.push(`Error ${e.response.status} from ${params.url} - ${date}`);
+        } else {
+          data.history = [`Error ${e.response.status} from ${params.url} - ${date}`];
+        }
+        error.history = data.history;
+        setData(error);
       }
       setLoading(false);
     }
@@ -61,7 +84,7 @@ function App() {
   </div>*/}
       <h2>Test requests to your favorite API!</h2>
       <Form handleApiCall={callApi} setParams={setParams} requestParams={requestParams} setLoading={setLoading}/>
-      <Results data={data} requestParams={requestParams} loading={loading}/>
+      <Content data={data} requestParams={requestParams} loading={loading}/>
       <Footer />
     </Fragment>
   );
