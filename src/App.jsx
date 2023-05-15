@@ -1,5 +1,5 @@
-import { useState, useEffect, Fragment } from 'react';
-
+import { useEffect, useReducer, Fragment } from 'react';
+import { initialState, dataReducer, callAPI, showResults, setLoading, repeatRequest } from './reducer/data';
 import './App.scss';
 
 // Let's talk about using index.js and some other name in the component folder.
@@ -9,59 +9,36 @@ import './App.scss';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
 import Form from './Components/Form';
-import Results from './Components/Results';
-import axios from 'axios';
+import Content from './Components/Content';
 
 function App() {
   //state
-  const [data, setData] = useState(null);
-  const [requestParams, setParams] = useState({method: 'GET'});
-  const [loading, setLoading] = useState(false);
-  
-  let callApi = async(params) => {
-    // mock output
-    /*const mockdata = {
-      count: 2,
-      results: [
-        {name: 'fake thing 1', url: 'http://fakethings.com/1'},
-        {name: 'fake thing 2', url: 'http://fakethings.com/2'},
-      ],
-    };*/
-    setParams(params);
-    await request(params);
-  }
+  const [state, dispatch] = useReducer(dataReducer, initialState);
 
-  let request = async(params) => {
-    if (params.url) {
-      const config = {
-        method: params.method,
-        url: params.url,
-        data: JSON.stringify(params.body),
-      };
-      try {
-        let resp = await axios(config)
-        setData({body: resp.data, headers: resp.headers});
-      } catch(e) {
-        setData({body: `Error ${e.response.status}: Invalid request`, headers: `Error ${e.response.status}: Invalid request`});
-      }
-      setLoading(false);
-    }
+  console.log('hello', state);
+
+  let setParams = (params) => {
+    console.log('params', params);
+    dispatch(callAPI(params));
   };
 
-  useEffect(() => {
-    request(requestParams);
-  }, [requestParams]);
+  let loading = () => {
+    dispatch(setLoading());
+  }
+
+  let getResults = () => {
+    dispatch(showResults(state.requestParams));
+  };
+
+  //data.history.push(`Error ${e.response.status} from ${params.url} - ${date}`);
+  //data.history.push(`${date} - ${params.method} request to ${params.url}`);
 
   return (
     <Fragment>
       <Header />
-      {/*<div className='log'>
-        <div>Request Method: {requestParams.method}</div>
-        <div>URL: {requestParams.url}</div>
-  </div>*/}
       <h2>Test requests to your favorite API!</h2>
-      <Form handleApiCall={callApi} setParams={setParams} requestParams={requestParams} setLoading={setLoading}/>
-      <Results data={data} requestParams={requestParams} loading={loading}/>
+      <Form handleApiCall={setParams} requestParams={state.requestParams} getResults={getResults}/>
+      <Content data={state.data} requestParams={state.requestParams} loading={state.loading}/>
       <Footer />
     </Fragment>
   );

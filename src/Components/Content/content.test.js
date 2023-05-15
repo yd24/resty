@@ -1,6 +1,6 @@
 'use strict';
 import { render, screen } from '@testing-library/react';
-import Results from './index';
+import Results from './Results/index';
 import '@testing-library/jest-dom';
 
 describe('Testing that results display', () => {
