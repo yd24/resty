@@ -1,4 +1,5 @@
-import { useState, useEffect, Fragment } from 'react';
+import { useEffect, useReducer, Fragment } from 'react';
+import { initialState, dataReducer, callAPI, showResults, setLoading, repeatRequest } from './reducer/data';
 import './App.scss';
 
 // Let's talk about using index.js and some other name in the component folder.
@@ -9,82 +10,35 @@ import Header from './Components/Header';
 import Footer from './Components/Footer';
 import Form from './Components/Form';
 import Content from './Components/Content';
-import axios from 'axios';
 
 function App() {
   //state
-  const [data, setData] = useState(null);
-  const [requestParams, setParams] = useState({method: 'GET'});
-  const [loading, setLoading] = useState(false);
+  const [state, dispatch] = useReducer(dataReducer, initialState);
 
-  let callApi = async(params) => {
-    // mock output
-    /*const mockdata = {
-      count: 2,
-      results: [
-        {name: 'fake thing 1', url: 'http://fakethings.com/1'},
-        {name: 'fake thing 2', url: 'http://fakethings.com/2'},
-      ],
-    };*/
-    setParams(params);
-  }
+  console.log('hello', state);
 
-  let request = async(params) => {
-    if (params.url) {
-      const config = {
-        method: params.method,
-        url: params.url,
-        data: JSON.stringify(params.body),
-      };
-      let date = new Date();
-      date = date.toISOString();
-      try {
-        let resp = await axios(config);
-        let update = {
-          body: resp.data, 
-          headers: resp.headers, 
-          history: null,
-        };
-        if (data?.history) {
-          data.history.push(`${date} - ${params.method} request to ${params.url}`);
-          update.history = data.history;
-        } else {
-          update.history = [`${date} - ${params.method} request to ${params.url}`];
-        }
-        setData(update);
-      } catch(e) {
-        console.log('yo');
-        let error = {
-            body: `Error ${e.response.status}: Invalid request`, 
-            headers: `Error ${e.response.status}: Invalid request`,
-            history: null,
-        };
-        if (data?.history) {
-          data.history.push(`Error ${e.response.status} from ${params.url} - ${date}`);
-        } else {
-          data.history = [`Error ${e.response.status} from ${params.url} - ${date}`];
-        }
-        error.history = data.history;
-        setData(error);
-      }
-      setLoading(false);
-    }
+  let setParams = (params) => {
+    console.log('params', params);
+    dispatch(callAPI(params));
   };
 
-  useEffect(() => {
-    request(requestParams);
-  }, [requestParams]);
+  let loading = () => {
+    dispatch(setLoading());
+  }
+
+  let getResults = () => {
+    dispatch(showResults(state.requestParams));
+  };
+
+  //data.history.push(`Error ${e.response.status} from ${params.url} - ${date}`);
+  //data.history.push(`${date} - ${params.method} request to ${params.url}`);
 
   return (
     <Fragment>
       <Header />
-      {/*<div className='log'>
-        <div>Request Method: {requestParams.method}</div>
-        <div>URL: {requestParams.url}</div>
-  </div>*/}
       <h2>Test requests to your favorite API!</h2>
-      <Form handleApiCall={callApi} setParams={setParams} requestParams={requestParams} setLoading={setLoading}/>
-      <Content data={data} requestParams={requestParams} loading={loading}/>
+      <Form handleApiCall={setParams} requestParams={state.requestParams} getResults={getResults}/>
+      <Content data={state.data} requestParams={state.requestParams} loading={state.loading}/>
       <Footer />
     </Fragment>
   );

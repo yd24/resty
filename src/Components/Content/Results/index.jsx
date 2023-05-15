@@ -34,10 +34,10 @@ function Results(props) {
 
   useEffect(() => {
     let results = document.querySelector('.json-container');
-    if (document.querySelector('.selected')) {
-      document.querySelector('.selected').classList.remove('selected');
-      document.querySelector('.results-tab').children[0].classList.add('selected');
+    if (document.querySelector('.json-container .selected')) {
+      document.querySelector('.json-container .selected').classList.remove('selected');
     }
+    document.querySelector('.results-tab').children[0].classList.add('selected');
     results.innerHTML = props.data ? prettyPrintJson.toHtml(props.data.body) : null;
   });
 
