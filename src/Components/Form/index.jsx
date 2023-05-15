@@ -11,7 +11,7 @@ function Form(props) {
     };
     props.handleApiCall(formData);
     props.setLoading();
-    props.getResults();
+    props.getResults(formData);
   };
 
   let select = (e) => {
