@@ -9,56 +9,32 @@ export const initialState = {
   },
   loading: false,
   history: [],
+  type: 'response',
 };
 
-export const dataReducer = async(state, action) => {
+export const dataReducer = (state, action) => {
   switch (action.type) {
-    case 'API_CALL':
-      return {
-        data: state.data,
-        requestParams: action.payload,
-        loading: false,
-        history: state.history,
-      };
+    case 'SET_API':
+      state.requestParams = action.payload;
+      return {...state};
+
     case 'SET_LOADING':
-      return {
-        data: state.data,
-        requestParams: state.requestParams,
-        loading: true,
-        history: state.history,
-      };
-    case 'SHOW_RESULTS':
-      let date = new Date();
-      let entry = {
-        date: date.toISOString(),
-        params: action.payload,
-      }
-      state.history.push(entry);
+      state.loading = true;
+      return {...state};
 
-      let update = {
-        body: null,
-        headers: null,
-      };
+    case 'SET_RESULTS':
+      state.data = action.payload;
+      state.loading = false;
+      return {...state};
 
-      let config = {
-        method: state.requestParams.method,
-        url: state.requestParams.url,
-        data: JSON.stringify(state.requestParams.body),
-      };
-      try {
-        let resp = await axios(config);
-        update.body = resp.data;
-        update.headers = resp.headers;
-      } catch(e) {
-        update.body = `Error ${e.response.status}: Invalid request`;
-        update.headers = `Error ${e.response.status}: Invalid request`;
-      }
-      return {
-        data: update,
-        requestParams: state.requestParams,
-        loading: false,
-        history: state.history,
-      };
+    case 'SET_HISTORY':
+      state.history.push(`${action.payload.date} - ${action.payload.params.method} request to ${action.payload.params.url}`)
+      return {...state};
+
+    case 'SET_TYPE':
+      state.type = action.payload;
+      return {...state};
+
     case 'REPEAT_REQ':
       return {
 
@@ -69,9 +45,9 @@ export const dataReducer = async(state, action) => {
   }
 };
 
-export const callAPI = (params) => {
+export const setAPI = (params) => {
   return {
-    type: 'API_CALL',
+    type: 'SET_API',
     payload: params,
   };
 };
@@ -83,11 +59,25 @@ export const setLoading = () => {
   };
 };
 
-export const showResults = (data) => {
+export const setResults = (data) => {
   return {
-    type: 'SHOW_RESULTS',
+    type: 'SET_RESULTS',
     payload: data,
   };
+};
+
+export const setHistory = (history) => {
+  return {
+    type: 'SET_HISTORY',
+    payload: history,
+  };
+};
+
+export const setType = (type) => {
+  return {
+    type: 'SET_TYPE',
+    payload: type,
+  }
 };
 
 export const repeatRequest = (e) => {
